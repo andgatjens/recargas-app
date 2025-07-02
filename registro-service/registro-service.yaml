@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registro-deployment
+  labels:
+    app: registro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registro
+  template:
+    metadata:
+      labels:
+        app: registro
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: registro-container
+          image: gcr.io/trusty-equinox-459800-k0/registro-service
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: '8080'
+          resources:
+            requests:
+              cpu: '50m'
+              memory: '64Mi'
+            limits:
+              cpu: '100m'
+              memory: '128Mi'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registro-service
+  annotations:
+    cloud.google.com/neg: '{"exposed_ports": {"8080":{}}}'
+spec:
+  selector:
+    app: registro
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: registro-ingress
+  annotations:
+    kubernetes.io/ingress.class: 'gce'
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /record
+            pathType: Prefix
+            backend:
+              service:
+                name: registro-service
+                port:
+                  number: 80
