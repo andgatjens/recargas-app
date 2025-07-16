@@ -2,6 +2,8 @@
 
 Este proyecto es una solución cloud-native, serverless y basada en microservicios para procesar recargas telefónicas. Fue diseñada bajo los principios de escalabilidad, resiliencia y desacoplamiento utilizando **Google Cloud Platform (GCP)** y aprovechando el nivel gratuito disponible.
 
+Demo: https://trusty-equinox-459800-k0.web.app/
+
 ---
 
 ## ✅ Arquitectura General
